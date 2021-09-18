@@ -17,6 +17,7 @@ import {
   SubscriptionInfo,
 } from "@microsoft/teamsfx-api";
 import {
+  FeatureFlagName,
   environmentManager,
   isMultiEnvEnabled,
   isValidProject,
@@ -184,20 +185,21 @@ export function getConfiguration(key: string): boolean {
 
 export function syncFeatureFlags() {
   // Sync arm support
-  process.env["TEAMSFX_ARM_SUPPORT"] = getConfiguration(
+  process.env[FeatureFlagName.ArmSupport] = getConfiguration(
     ConfigurationKey.ArmSupportEnabled
   ).toString();
 
-  process.env["TEAMSFX_BICEP_ENV_CHECKER_ENABLE"] = getConfiguration(
+  process.env[FeatureFlagName.BicepEnvCheckerEnable] = getConfiguration(
     ConfigurationKey.BicepEnvCheckerEnable
   ).toString();
 
-  // Sync multi-env support (bundled ARM support & bicep env checker)
+  // Sync multi-env support (bundled ARM support & bicep env checker & remote collaboration)
   const flag = getConfiguration(ConfigurationKey.MultiEnvEnabled);
   if (flag) {
-    process.env["TEAMSFX_MULTI_ENV"] = flag.toString();
-    process.env["TEAMSFX_ARM_SUPPORT"] = flag.toString();
-    process.env["TEAMSFX_BICEP_ENV_CHECKER_ENABLE"] = flag.toString();
+    process.env[FeatureFlagName.MultiEnv] = flag.toString();
+    process.env[FeatureFlagName.ArmSupport] = flag.toString();
+    process.env[FeatureFlagName.BicepEnvCheckerEnable] = flag.toString();
+    process.env[FeatureFlagName.RemoteCollaboration] = flag.toString();
   }
 }
 

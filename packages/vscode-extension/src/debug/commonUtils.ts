@@ -134,7 +134,11 @@ async function executeLocalDebugUserTask(funcName: string, params?: unknown): Pr
     inputs.ignoreConfigPersist = true;
     if (isMultiEnvEnabled()) {
       const isRemote = params === "remote";
-      inputs.ignoreEnvInfo = !isRemote;
+      if (isRemote) {
+        inputs.askEnvSelect = true;
+      } else {
+        inputs.ignoreEnvInfo = true;
+      }
     }
     const result = await core.executeUserTask(func, inputs);
     if (result.isErr()) {
